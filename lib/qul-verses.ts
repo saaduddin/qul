@@ -2,37 +2,43 @@ import { readFileSync } from "node:fs"
 import path from "node:path"
 
 export type QulVerse = {
-  serial: number
   chapter: number
   verse: number
   verseKey: string
+  /** How many times the word "Qul" appears in this ayah */
+  occurrences: number
 }
 
-let cache: QulVerse[] | null = null
+let cache: { verses: QulVerse[]; totalOccurrences: number } | null = null
 
-export function getQulVerses(): QulVerse[] {
+export function getQulData() {
   if (cache) return cache
   const csvPath = path.join(process.cwd(), "lib", "qul-occurrences.csv")
   const raw = readFileSync(csvPath, "utf8")
   const lines = raw.trim().split(/\r?\n/).slice(1)
-  const list: QulVerse[] = []
+  const counts = new Map<string, { chapter: number; verse: number; count: number }>()
+  let totalOccurrences = 0
   for (const line of lines) {
-    const [serial, sura, verse] = line.split(",").map((s) => s.trim())
-    if (!serial || !sura || !verse) continue
-    list.push({
-      serial: Number(serial),
-      chapter: Number(sura),
-      verse: Number(verse),
-      verseKey: `${sura}:${verse}`,
-    })
+    const [, sura, verse] = line.split(",").map((s) => s.trim())
+    if (!sura || !verse) continue
+    totalOccurrences++
+    const key = `${sura}:${verse}`
+    const prev = counts.get(key)
+    if (prev) prev.count++
+    else counts.set(key, { chapter: Number(sura), verse: Number(verse), count: 1 })
   }
-  // de-duplicate by verseKey (some lines repeat the same ayah for multiple Qul occurrences)
-  const seen = new Set<string>()
-  const unique = list.filter((v) => {
-    if (seen.has(v.verseKey)) return false
-    seen.add(v.verseKey)
-    return true
-  })
-  cache = unique
+  const verses: QulVerse[] = Array.from(counts.entries())
+    .map(([verseKey, v]) => ({
+      verseKey,
+      chapter: v.chapter,
+      verse: v.verse,
+      occurrences: v.count,
+    }))
+    .sort((a, b) => a.chapter - b.chapter || a.verse - b.verse)
+  cache = { verses, totalOccurrences }
   return cache
+}
+
+export function getQulVerses(): QulVerse[] {
+  return getQulData().verses
 }

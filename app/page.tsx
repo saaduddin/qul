@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 import Link from "next/link"
 import { BookmarkCheck, BookOpen, ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
-import { getQulVerses } from "@/lib/qul-verses"
+import { getQulData } from "@/lib/qul-verses"
 import { getVerseByKey } from "@/lib/qf-content"
 import { listBookmarks, type Bookmark } from "@/lib/qf-user"
 import { BookmarkButton } from "@/components/bookmark-button"
@@ -38,7 +38,7 @@ export default async function HomePage({ searchParams }: { searchParams: SearchP
   const sp = await searchParams
   const page = Math.max(1, Number(sp.page ?? 1) || 1)
 
-  const allVerses = getQulVerses()
+  const { verses: allVerses, totalOccurrences } = getQulData()
   const totalPages = Math.ceil(allVerses.length / PAGE_SIZE)
   const start = (page - 1) * PAGE_SIZE
   const slice = allVerses.slice(start, start + PAGE_SIZE)
@@ -68,19 +68,22 @@ export default async function HomePage({ searchParams }: { searchParams: SearchP
             <span>Quran Foundation API</span>
           </div>
           <h1 className="text-pretty text-3xl font-semibold tracking-tight md:text-4xl">
-            Verses that begin with{" "}
+            Verses containing{" "}
             <span className="font-serif italic text-amber-700 dark:text-amber-500">Qul</span>
           </h1>
           <p className="max-w-2xl text-pretty leading-relaxed text-muted-foreground">
-            The Arabic word{" "}
-            <span className="font-serif italic">Qul</span> — meaning <em>&quot;Say&quot;</em> — appears as a divine
-            instruction throughout the Qur&apos;an. Browse all{" "}
-            <strong className="text-foreground">{allVerses.length}</strong> such verses, read translations, and save
-            your favorites.
+            The Arabic imperative{" "}
+            <span className="font-serif italic">Qul</span> — meaning <em>&quot;Say&quot;</em> — is a divine
+            instruction that occurs <strong className="text-foreground">{totalOccurrences}</strong> times across{" "}
+            <strong className="text-foreground">{allVerses.length}</strong> distinct verses of the Qur&apos;an. Browse
+            them below, read translations, and bookmark your favorites.
           </p>
           <div className="flex flex-wrap items-center gap-2 pt-2">
             <Badge variant="secondary" className="font-normal">
               {allVerses.length} verses
+            </Badge>
+            <Badge variant="secondary" className="font-normal">
+              {totalOccurrences} occurrences
             </Badge>
             <Badge variant="secondary" className="font-normal">
               <BookmarkCheck className="mr-1 h-3 w-3" />
@@ -120,6 +123,11 @@ export default async function HomePage({ searchParams }: { searchParams: SearchP
                       <span className="text-sm text-muted-foreground">
                         Surah {meta.chapter}, Ayah {meta.verse}
                       </span>
+                      {meta.occurrences > 1 ? (
+                        <Badge variant="outline" className="text-xs">
+                          {meta.occurrences}× Qul
+                        </Badge>
+                      ) : null}
                     </div>
                     <BookmarkButton chapter={meta.chapter} verse={meta.verse} bookmarkId={bookmarkId} />
                   </CardHeader>
