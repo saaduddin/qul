@@ -73,7 +73,7 @@ export default async function HomePage({ searchParams }: { searchParams: SearchP
           </h1>
           <p className="max-w-2xl text-pretty leading-relaxed text-muted-foreground">
             The Arabic imperative{" "}
-            <span className="font-serif italic">Qul</span> — meaning <em>&quot;Say&quot;</em> — is a divine
+            <span className="font-serif">قُلْ</span> — meaning <em>&quot;Say&quot;</em> — is a divine
             instruction that occurs <strong className="text-foreground">{totalOccurrences}</strong> times across{" "}
             <strong className="text-foreground">{allVerses.length}</strong> {" "} distinct verses of the Qur&apos;an. Browse
             them below, read translations, and bookmark your favorites.
