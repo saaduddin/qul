@@ -109,9 +109,11 @@ export async function getVerseByKey(verseKey: string, translationId = 131): Prom
     searchParams: {
       language: "en",
       translations: String(translationId),
-      fields: "text_uthmani,translations",
+      fields: "text_uthmani",
     },
     revalidate: 60 * 60 * 24, // verses are immutable
   })
+  console.log("[v0] raw verse keys:", Object.keys(data.verse ?? {}))
+  console.log("[v0] translations:", JSON.stringify(data.verse?.translations))
   return data.verse
 }
