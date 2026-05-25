@@ -108,8 +108,8 @@ export async function getVerseByKey(verseKey: string, translationId = 131): Prom
   const data = await qfContentFetch<{ verse: ApiVerse }>(`/content/api/v4/verses/by_key/${verseKey}`, {
     searchParams: {
       language: "en",
-      translations: translationId,
-      fields: "text_uthmani,chapter_id",
+      translations: String(translationId),
+      fields: "text_uthmani,translations",
     },
     revalidate: 60 * 60 * 24, // verses are immutable
   })
