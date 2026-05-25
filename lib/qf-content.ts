@@ -104,12 +104,13 @@ export type ApiVerse = {
   translations?: { resource_id: number; text: string }[]
 }
 
-export async function getVerseByKey(verseKey: string, translationId = 131): Promise<ApiVerse> {
+// Translation ID 20 = Saheeh International (English)
+export async function getVerseByKey(verseKey: string, translationId = 20): Promise<ApiVerse> {
   const data = await qfContentFetch<{ verse: ApiVerse }>(`/content/api/v4/verses/by_key/${verseKey}`, {
     searchParams: {
       language: "en",
       translations: String(translationId),
-      fields: "text_uthmani,translations",
+      fields: "text_uthmani",
     },
     revalidate: 60 * 60 * 24, // verses are immutable
   })
