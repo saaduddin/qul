@@ -19,7 +19,7 @@ export function getQulData() {
   const counts = new Map<string, { chapter: number; verse: number; count: number }>()
   let totalOccurrences = 0
   for (const line of lines) {
-    const [, sura, verse] = line.split(",").map((s) => s.trim())
+    const [sura, verse] = line.split(",").map((s) => s.trim())
     if (!sura || !verse) continue
     totalOccurrences++
     const key = `${sura}:${verse}`

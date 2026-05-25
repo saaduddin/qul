@@ -2,7 +2,7 @@
 
 A minimal Next.js app that surfaces every verse of the Qur'an containing the word **Qul** (قُلْ — "Say"), powered by the [Quran Foundation APIs](https://api-docs.quran.foundation).
 
-The CSV source (`lib/qul-occurrences.csv`) records 332 individual occurrences across **306 distinct verses**. Some ayahs contain the imperative more than once; those are labelled with a `2× Qul` / `3× Qul` badge.
+The CSV source (`lib/qul-occurrences.csv`) records 333 individual occurrences across **307 distinct verses**. Some ayahs contain the imperative more than once; those are labelled with a `2× Qul` / `3× Qul` badge.
 
 ## Features
 
