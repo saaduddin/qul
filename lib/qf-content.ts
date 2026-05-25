@@ -104,8 +104,8 @@ export type ApiVerse = {
   translations?: { resource_id: number; text: string }[]
 }
 
-// Translation ID 20 = Saheeh International (English)
-export async function getVerseByKey(verseKey: string, translationId = 20): Promise<ApiVerse> {
+// Translation ID 84 = Dr. Muhsin Khan (English)
+export async function getVerseByKey(verseKey: string, translationId = 84): Promise<ApiVerse> {
   const data = await qfContentFetch<{ verse: ApiVerse }>(`/content/api/v4/verses/by_key/${verseKey}`, {
     searchParams: {
       language: "en",
